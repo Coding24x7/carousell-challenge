@@ -1,0 +1,4 @@
+vendor/
+.vendor/
+goa_temp/
+carousell-challenge

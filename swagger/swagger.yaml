@@ -1,0 +1,360 @@
+consumes:
+- application/json
+definitions:
+  CreateTopicPayload:
+    example:
+      content: Non non tempora id consequatur dolor.
+      userID: Esse explicabo perspiciatis quo laudantium.
+    properties:
+      content:
+        description: Content of the topic
+        example: Non non tempora id consequatur dolor.
+        type: string
+      userID:
+        description: Creator of this topic
+        example: Esse explicabo perspiciatis quo laudantium.
+        type: string
+    required:
+    - content
+    - userID
+    title: CreateTopicPayload
+    type: object
+  CreateUserPayload:
+    example:
+      country: Qui iste et.
+      name: Ut qui et quia recusandae voluptatem.
+    properties:
+      country:
+        description: country of the user
+        example: Qui iste et.
+        type: string
+      name:
+        description: name of the user
+        example: Ut qui et quia recusandae voluptatem.
+        type: string
+    required:
+    - name
+    - country
+    title: CreateUserPayload
+    type: object
+  VoteTopicPayload:
+    example:
+      userID: Nihil voluptates dolorem.
+      vote: down
+    properties:
+      userID:
+        description: user id
+        example: Nihil voluptates dolorem.
+        type: string
+      vote:
+        description: upvote/downvote topic
+        enum:
+        - up
+        - down
+        example: down
+        type: string
+    required:
+    - userID
+    - vote
+    title: VoteTopicPayload
+    type: object
+  error:
+    description: Error response media type (default view)
+    example:
+      code: invalid_value
+      detail: Value of ID must be an integer
+      id: 3F1FKVRR
+      meta:
+        timestamp: 1.458609066e+09
+      status: "400"
+    properties:
+      code:
+        description: an application-specific error code, expressed as a string value.
+        example: invalid_value
+        type: string
+      detail:
+        description: a human-readable explanation specific to this occurrence of the
+          problem.
+        example: Value of ID must be an integer
+        type: string
+      id:
+        description: a unique identifier for this particular occurrence of the problem.
+        example: 3F1FKVRR
+        type: string
+      meta:
+        additionalProperties: true
+        description: a meta object containing non-standard meta-information about
+          the error.
+        example:
+          timestamp: 1.458609066e+09
+        type: object
+      status:
+        description: the HTTP status code applicable to this problem, expressed as
+          a string value.
+        example: "400"
+        type: string
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+info:
+  description: Carousell Challenge.
+  title: Carousell Challenge
+  version: "0.1"
+paths:
+  /{filepath}:
+    get:
+      operationId: public#/*filepath
+      parameters:
+      - description: Relative file path
+        in: path
+        name: filepath
+        required: true
+        type: string
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      - https
+      summary: Download public/
+  /api/v1/topics:
+    get:
+      description: Get top topics
+      operationId: topic#show
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: show topic
+      tags:
+      - topic
+    post:
+      description: Create new topic
+      operationId: topic#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateTopicPayload'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: create topic
+      tags:
+      - topic
+  /api/v1/topics/{topicID}:
+    delete:
+      description: remove the topic
+      operationId: topic#delete
+      parameters:
+      - in: path
+        name: topicID
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: delete topic
+      tags:
+      - topic
+    patch:
+      description: upvote/downvote cluster
+      operationId: topic#vote
+      parameters:
+      - in: path
+        name: topicID
+        required: true
+        type: string
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/VoteTopicPayload'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: vote topic
+      tags:
+      - topic
+  /api/v1/users:
+    get:
+      description: Get all users
+      operationId: user#show
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: show user
+      tags:
+      - user
+    post:
+      description: Create new user
+      operationId: user#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateUserPayload'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: create user
+      tags:
+      - user
+  /api/v1/users/{userID}:
+    delete:
+      description: remove user
+      operationId: user#remove
+      parameters:
+      - in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: remove user
+      tags:
+      - user
+  /api/v1/users/{userName}:
+    get:
+      description: Get user details by name
+      operationId: user#get
+      parameters:
+      - in: path
+        name: userName
+        required: true
+        type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      schemes:
+      - http
+      - https
+      summary: get user
+      tags:
+      - user
+  /swagger.json:
+    get:
+      operationId: swagger#/swagger.json
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+      schemes:
+      - http
+      - https
+      summary: Download swagger/swagger.json
+produces:
+- application/json
+schemes:
+- http
+- https
+swagger: "2.0"
