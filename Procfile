@@ -1,1 +1,1 @@
-web: ./run.sh
+web: go run main.go
