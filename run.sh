@@ -3,7 +3,7 @@
 set -x
 set -e
 
-path=${GOPATH}/src/github.com/Coding24X7/carousell-challenge
+path=${GOPATH}/src/github.com/Coding24x7/carousell-challenge
 
 
 cd ${path}
