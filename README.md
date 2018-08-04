@@ -48,7 +48,7 @@ It has three endpoints
 It will create new user account.
 
 #### Delete user
-It will remove user account already registered with service.
+It will remove user account which is already registered with service.
 
 #### Login user account
 It will login to user account by using input username and password.
@@ -65,7 +65,7 @@ It will post new topic for input user with given content.
 It will show top 20 topics sorted by upvotes (in descending order).
 
 #### Upvote/Downvote topic
-It will add users vote for given topic
+It will add users' vote for given topic.
 
 
 ### Testing
