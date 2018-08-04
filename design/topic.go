@@ -10,7 +10,7 @@ var _ = Resource("topic", func() {
 
 	Action("show", func() {
 		Routing(GET(""))
-		Description("Show top topics")
+		Description("Show top 20 topics sorted by upvotes (in descending order)")
 
 		Response(OK, Any)
 		Response(NotFound, String)
@@ -21,14 +21,14 @@ var _ = Resource("topic", func() {
 
 	Action("post", func() {
 		Routing(POST(""))
-		Description("Post new topic")
+		Description("Post new topic for user")
 
 		Payload(func() {
 			Attribute("content", String, "Content of the topic", func() {
 				MaxLength(255)
 			})
-			Attribute("userName", String, "Author of this topic")
-			Required("content", "userName")
+			Attribute("author", String, "Author of this topic")
+			Required("content", "author")
 
 		})
 
@@ -40,7 +40,7 @@ var _ = Resource("topic", func() {
 	})
 
 	Action("vote", func() {
-		Description("upvote/downvote cluster")
+		Description("Upvote/Downvote topic")
 		Routing(PATCH("/:topicID"))
 
 		Payload(func() {

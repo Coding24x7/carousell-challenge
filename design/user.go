@@ -10,7 +10,7 @@ var _ = Resource("user", func() {
 
 	Action("register", func() {
 		Routing(POST(""))
-		Description("Register new user")
+		Description("Register new user with input details to registry")
 
 		Payload(func() {
 			Attribute("name", String, "username")
@@ -29,7 +29,7 @@ var _ = Resource("user", func() {
 
 	Action("login", func() {
 		Routing(GET("/:userName"))
-		Description("Login user details by name")
+		Description("Login user")
 
 		Params(func() {
 			Attribute("password", String, "password of the user")
@@ -44,7 +44,7 @@ var _ = Resource("user", func() {
 	})
 
 	Action("remove", func() {
-		Description("remove user")
+		Description("Remove user from registry")
 		Routing(DELETE("/:userName"))
 
 		Response(OK, Any)

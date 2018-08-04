@@ -20,7 +20,7 @@ func NewTopicController(service *goa.Service) *TopicController {
 
 // Post runs the post action.
 func (c *TopicController) Post(ctx *app.PostTopicContext) error {
-	t, err := lib.PostTopic(ctx.Payload.UserName, ctx.Payload.Content)
+	t, err := lib.PostTopic(ctx.Payload.Author, ctx.Payload.Content)
 
 	if err != nil {
 		return processErr(ctx, err)

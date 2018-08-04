@@ -3,40 +3,40 @@ consumes:
 definitions:
   PostTopicPayload:
     example:
-      content: 4njw3zeoyp
-      userName: Laudantium quaerat nihil voluptates dolorem.
+      author: Non non tempora id consequatur dolor.
+      content: oyp9dknlxr
     properties:
+      author:
+        description: Author of this topic
+        example: Non non tempora id consequatur dolor.
+        type: string
       content:
         description: Content of the topic
-        example: 4njw3zeoyp
+        example: oyp9dknlxr
         maxLength: 255
-        type: string
-      userName:
-        description: Author of this topic
-        example: Laudantium quaerat nihil voluptates dolorem.
         type: string
     required:
     - content
-    - userName
+    - author
     title: PostTopicPayload
     type: object
   RegisterUserPayload:
     example:
-      country: Recusandae voluptatem.
-      name: Porro ipsum voluptatem aut.
-      password: Veniam accusamus quasi placeat quasi.
+      country: Qui et quia recusandae voluptatem blanditiis.
+      name: Ipsum voluptatem aut tenetur veniam accusamus.
+      password: Placeat quasi aspernatur est omnis perspiciatis illo.
     properties:
       country:
         description: country of the user
-        example: Recusandae voluptatem.
+        example: Qui et quia recusandae voluptatem blanditiis.
         type: string
       name:
         description: username
-        example: Porro ipsum voluptatem aut.
+        example: Ipsum voluptatem aut tenetur veniam accusamus.
         type: string
       password:
         description: password of the user
-        example: Veniam accusamus quasi placeat quasi.
+        example: Placeat quasi aspernatur est omnis perspiciatis illo.
         type: string
     required:
     - name
@@ -46,12 +46,12 @@ definitions:
     type: object
   VoteTopicPayload:
     example:
-      userName: Officiis qui iste et eveniet ut qui.
+      userName: Qui iste et.
       vote: down
     properties:
       userName:
         description: username
-        example: Officiis qui iste et eveniet ut qui.
+        example: Qui iste et.
         type: string
       vote:
         description: upvote/downvote topic
@@ -131,7 +131,7 @@ paths:
       summary: Download public/
   /api/v1/topics:
     get:
-      description: Show top topics
+      description: Show top 20 topics sorted by upvotes (in descending order)
       operationId: topic#show
       produces:
       - text/plain
@@ -153,7 +153,7 @@ paths:
       tags:
       - topic
     post:
-      description: Post new topic
+      description: Post new topic for user
       operationId: topic#post
       parameters:
       - in: body
@@ -182,7 +182,7 @@ paths:
       - topic
   /api/v1/topics/{topicID}:
     patch:
-      description: upvote/downvote cluster
+      description: Upvote/Downvote topic
       operationId: topic#vote
       parameters:
       - in: path
@@ -215,7 +215,7 @@ paths:
       - topic
   /api/v1/users:
     post:
-      description: Register new user
+      description: Register new user with input details to registry
       operationId: user#register
       parameters:
       - in: body
@@ -244,7 +244,7 @@ paths:
       - user
   /api/v1/users/{userName}:
     delete:
-      description: remove user
+      description: Remove user from registry
       operationId: user#remove
       parameters:
       - in: path
@@ -271,7 +271,7 @@ paths:
       tags:
       - user
     get:
-      description: Login user details by name
+      description: Login user
       operationId: user#login
       parameters:
       - description: password of the user

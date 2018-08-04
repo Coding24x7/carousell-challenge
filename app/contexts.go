@@ -39,10 +39,10 @@ func NewPostTopicContext(ctx context.Context, r *http.Request, service *goa.Serv
 
 // postTopicPayload is the topic post action payload.
 type postTopicPayload struct {
+	// Author of this topic
+	Author *string `form:"author,omitempty" json:"author,omitempty" xml:"author,omitempty"`
 	// Content of the topic
 	Content *string `form:"content,omitempty" json:"content,omitempty" xml:"content,omitempty"`
-	// Author of this topic
-	UserName *string `form:"userName,omitempty" json:"userName,omitempty" xml:"userName,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -50,8 +50,8 @@ func (payload *postTopicPayload) Validate() (err error) {
 	if payload.Content == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "content"))
 	}
-	if payload.UserName == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userName"))
+	if payload.Author == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "author"))
 	}
 	if payload.Content != nil {
 		if utf8.RuneCountInString(*payload.Content) > 255 {
@@ -64,21 +64,21 @@ func (payload *postTopicPayload) Validate() (err error) {
 // Publicize creates PostTopicPayload from postTopicPayload
 func (payload *postTopicPayload) Publicize() *PostTopicPayload {
 	var pub PostTopicPayload
+	if payload.Author != nil {
+		pub.Author = *payload.Author
+	}
 	if payload.Content != nil {
 		pub.Content = *payload.Content
-	}
-	if payload.UserName != nil {
-		pub.UserName = *payload.UserName
 	}
 	return &pub
 }
 
 // PostTopicPayload is the topic post action payload.
 type PostTopicPayload struct {
+	// Author of this topic
+	Author string `form:"author" json:"author" xml:"author"`
 	// Content of the topic
 	Content string `form:"content" json:"content" xml:"content"`
-	// Author of this topic
-	UserName string `form:"userName" json:"userName" xml:"userName"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -86,8 +86,8 @@ func (payload *PostTopicPayload) Validate() (err error) {
 	if payload.Content == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "content"))
 	}
-	if payload.UserName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userName"))
+	if payload.Author == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "author"))
 	}
 	if utf8.RuneCountInString(payload.Content) > 255 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.content`, payload.Content, utf8.RuneCountInString(payload.Content), 255, false))
