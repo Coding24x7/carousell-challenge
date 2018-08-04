@@ -7,17 +7,6 @@
 https://golang.org/doc/install
 
 
-### Setup dependency management tool
-
-```bash
-go get github.com/tools/godep
-```
-
-#### Get all the go code dependencies in vendor folder
-```bash
-godep save
-```
-
 ### For Rest API and swagger code generation by goagen
 
 ```bash
@@ -72,4 +61,19 @@ It will add users' vote for given topic.
 
 ```bash
 go test ./lib/
+```
+
+### Development
+
+If you need to change any dependency or add new dependency please manage by following steps:
+
+#### Setup dependency management tool
+
+```bash
+go get github.com/tools/godep
+```
+
+#### Get all the go code dependencies in vendor folder
+```bash
+godep save
 ```
