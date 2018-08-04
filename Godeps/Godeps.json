@@ -1,0 +1,77 @@
+{
+	"ImportPath": "github.com/Coding24x7/carousell-challenge",
+	"GoVersion": "go1.10",
+	"GodepVersion": "v80",
+	"Deps": [
+		{
+			"ImportPath": "github.com/armon/go-metrics",
+			"Rev": "783273d703149aaeb9897cf58613d5af48861c25"
+		},
+		{
+			"ImportPath": "github.com/dimfeld/httptreemux",
+			"Comment": "v3.9.0",
+			"Rev": "13dde8a00d96b369e7398490fd8a3af9ca114b84"
+		},
+		{
+			"ImportPath": "github.com/goadesign/goa",
+			"Comment": "v1.0.0-309-g6e802db",
+			"Rev": "6e802dbfdc5452e8fc560638a15cc87ae63929a5"
+		},
+		{
+			"ImportPath": "github.com/goadesign/goa/client",
+			"Comment": "v1.0.0-309-g6e802db",
+			"Rev": "6e802dbfdc5452e8fc560638a15cc87ae63929a5"
+		},
+		{
+			"ImportPath": "github.com/goadesign/goa/cors",
+			"Comment": "v1.0.0-309-g6e802db",
+			"Rev": "6e802dbfdc5452e8fc560638a15cc87ae63929a5"
+		},
+		{
+			"ImportPath": "github.com/goadesign/goa/logging/logrus",
+			"Comment": "v1.0.0-309-g6e802db",
+			"Rev": "6e802dbfdc5452e8fc560638a15cc87ae63929a5"
+		},
+		{
+			"ImportPath": "github.com/goadesign/goa/middleware",
+			"Comment": "v1.0.0-309-g6e802db",
+			"Rev": "6e802dbfdc5452e8fc560638a15cc87ae63929a5"
+		},
+		{
+			"ImportPath": "github.com/goadesign/goa/uuid",
+			"Comment": "v1.0.0-309-g6e802db",
+			"Rev": "6e802dbfdc5452e8fc560638a15cc87ae63929a5"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/go-immutable-radix",
+			"Rev": "7f3cd4390caab3250a57f30efdb2a65dd7649ecf"
+		},
+		{
+			"ImportPath": "github.com/hashicorp/golang-lru/simplelru",
+			"Rev": "0fb14efe8c47ae851c0034ed7a448854d3d34cf3"
+		},
+		{
+			"ImportPath": "github.com/satori/go.uuid",
+			"Comment": "v1.2.0-4-g36e9d2e",
+			"Rev": "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
+		},
+		{
+			"ImportPath": "github.com/sirupsen/logrus",
+			"Comment": "v1.0.0-1-g85b1699",
+			"Rev": "85b1699d505667d13f8ac4478c1debbf85d6c5de"
+		},
+		{
+			"ImportPath": "github.com/tylerb/graceful",
+			"Comment": "v1.2.15-3-gd72b015",
+			"Rev": "d72b0151351a13d0421b763b88f791469c4f5dc7"
+		},
+		{
+			"ImportPath": "golang.org/x/net/websocket",
+			"Rev": "5f9ae10d9af5b1c89ae6904293b14b064d4ada23"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "8c0ece68c28377f4c326d85b94f8df0dace46f80"
+		}
+	]
+}
