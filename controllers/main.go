@@ -14,7 +14,8 @@ import (
 	"github.com/tylerb/graceful"
 )
 
-func GoaServer(logger *log.Logger) {
+// GoaServer starts server
+func GoaServer(logger *log.Logger, address string) {
 	// Create service
 	service := goa.New("carousell-challenge")
 	logAdapter := goalogrus.New(logger)
@@ -41,7 +42,7 @@ func GoaServer(logger *log.Logger) {
 	server := &graceful.Server{
 		Timeout: time.Duration(15) * time.Second,
 		Server: &http.Server{
-			Addr:    "localhost:8080",
+			Addr:    address,
 			Handler: service.Mux,
 		},
 	}

@@ -3,6 +3,7 @@
 package main
 
 import (
+	"os"
 	"runtime"
 	"runtime/debug"
 
@@ -25,5 +26,15 @@ func main() {
 	// initialize logger
 	logger := log.New()
 
-	controllers.GoaServer(logger)
+	controllers.GoaServer(logger, getAddress())
+}
+
+func getAddress() string {
+	var port = os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+		log.Info("No PORT environment variable detected, defaulting to " + port)
+	}
+	return ":" + port
 }
