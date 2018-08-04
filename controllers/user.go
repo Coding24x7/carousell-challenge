@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/Coding24x7/carousell-challenge/app"
+	"github.com/Coding24x7/carousell-challenge/lib"
 	"github.com/goadesign/goa"
 )
 
@@ -15,42 +16,32 @@ func NewUserController(service *goa.Service) *UserController {
 	return &UserController{Controller: service.NewController("UserController")}
 }
 
-// Create runs the create action.
-func (c *UserController) Create(ctx *app.CreateUserContext) error {
-	// UserController_Create: start_implement
+// Register runs the create action.
+func (c *UserController) Register(ctx *app.RegisterUserContext) error {
+	u, err := lib.RegisterUser(ctx.Payload.Name, ctx.Payload.Password, ctx.Payload.Country)
 
-	// Put your logic here
-
-	return nil
-	// UserController_Create: end_implement
+	if err != nil {
+		return processErr(ctx, err)
+	}
+	return ctx.OK(u)
 }
 
-// Get runs the get action.
-func (c *UserController) Get(ctx *app.GetUserContext) error {
-	// UserController_Get: start_implement
+// Login runs the get action.
+func (c *UserController) Login(ctx *app.LoginUserContext) error {
+	u, err := lib.LoginUser(ctx.UserName, ctx.Password)
+	if err != nil {
+		return processErr(ctx, err)
+	}
 
-	// Put your logic here
-
-	return nil
-	// UserController_Get: end_implement
+	return ctx.OK(u)
 }
 
 // Remove runs the remove action.
 func (c *UserController) Remove(ctx *app.RemoveUserContext) error {
-	// UserController_Remove: start_implement
+	u, err := lib.DeleteUser(ctx.UserName)
+	if err != nil {
+		return processErr(ctx, err)
+	}
 
-	// Put your logic here
-
-	return nil
-	// UserController_Remove: end_implement
-}
-
-// Show runs the show action.
-func (c *UserController) Show(ctx *app.ShowUserContext) error {
-	// UserController_Show: start_implement
-
-	// Put your logic here
-
-	return nil
-	// UserController_Show: end_implement
+	return ctx.OK(u)
 }

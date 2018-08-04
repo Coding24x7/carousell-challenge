@@ -28,14 +28,14 @@ func GoaServer(logger *log.Logger) {
 	service.Use(middleware.Recover())
 
 	// Mount "public" controller
-	c := NewPublicController(service)
-	app.MountPublicController(service, c)
+	app.MountPublicController(service, NewPublicController(service))
 	// Mount "swagger" controller
-	c2 := NewSwaggerController(service)
-	app.MountSwaggerController(service, c2)
+	app.MountSwaggerController(service, NewSwaggerController(service))
 	// Mount "topics" controller
-	c3 := NewTopicController(service)
-	app.MountTopicController(service, c3)
+	app.MountTopicController(service, NewTopicController(service))
+	// Mount "user" controller
+	c4 := NewUserController(service)
+	app.MountUserController(service, c4)
 
 	// Setup graceful server
 	server := &graceful.Server{

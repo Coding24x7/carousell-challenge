@@ -14,80 +14,89 @@ import (
 	"context"
 	"github.com/goadesign/goa"
 	"net/http"
+	"unicode/utf8"
 )
 
-// CreateTopicContext provides the topic create action context.
-type CreateTopicContext struct {
+// PostTopicContext provides the topic post action context.
+type PostTopicContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Payload *CreateTopicPayload
+	Payload *PostTopicPayload
 }
 
-// NewCreateTopicContext parses the incoming request URL and body, performs validations and creates the
-// context used by the topic controller create action.
-func NewCreateTopicContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateTopicContext, error) {
+// NewPostTopicContext parses the incoming request URL and body, performs validations and creates the
+// context used by the topic controller post action.
+func NewPostTopicContext(ctx context.Context, r *http.Request, service *goa.Service) (*PostTopicContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := CreateTopicContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := PostTopicContext{Context: ctx, ResponseData: resp, RequestData: req}
 	return &rctx, err
 }
 
-// createTopicPayload is the topic create action payload.
-type createTopicPayload struct {
+// postTopicPayload is the topic post action payload.
+type postTopicPayload struct {
 	// Content of the topic
 	Content *string `form:"content,omitempty" json:"content,omitempty" xml:"content,omitempty"`
-	// Creator of this topic
-	UserID *string `form:"userID,omitempty" json:"userID,omitempty" xml:"userID,omitempty"`
+	// Author of this topic
+	UserName *string `form:"userName,omitempty" json:"userName,omitempty" xml:"userName,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
-func (payload *createTopicPayload) Validate() (err error) {
+func (payload *postTopicPayload) Validate() (err error) {
 	if payload.Content == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "content"))
 	}
-	if payload.UserID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userID"))
+	if payload.UserName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userName"))
+	}
+	if payload.Content != nil {
+		if utf8.RuneCountInString(*payload.Content) > 255 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.content`, *payload.Content, utf8.RuneCountInString(*payload.Content), 255, false))
+		}
 	}
 	return
 }
 
-// Publicize creates CreateTopicPayload from createTopicPayload
-func (payload *createTopicPayload) Publicize() *CreateTopicPayload {
-	var pub CreateTopicPayload
+// Publicize creates PostTopicPayload from postTopicPayload
+func (payload *postTopicPayload) Publicize() *PostTopicPayload {
+	var pub PostTopicPayload
 	if payload.Content != nil {
 		pub.Content = *payload.Content
 	}
-	if payload.UserID != nil {
-		pub.UserID = *payload.UserID
+	if payload.UserName != nil {
+		pub.UserName = *payload.UserName
 	}
 	return &pub
 }
 
-// CreateTopicPayload is the topic create action payload.
-type CreateTopicPayload struct {
+// PostTopicPayload is the topic post action payload.
+type PostTopicPayload struct {
 	// Content of the topic
 	Content string `form:"content" json:"content" xml:"content"`
-	// Creator of this topic
-	UserID string `form:"userID" json:"userID" xml:"userID"`
+	// Author of this topic
+	UserName string `form:"userName" json:"userName" xml:"userName"`
 }
 
 // Validate runs the validation rules defined in the design.
-func (payload *CreateTopicPayload) Validate() (err error) {
+func (payload *PostTopicPayload) Validate() (err error) {
 	if payload.Content == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "content"))
 	}
-	if payload.UserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userID"))
+	if payload.UserName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userName"))
+	}
+	if utf8.RuneCountInString(payload.Content) > 255 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.content`, payload.Content, utf8.RuneCountInString(payload.Content), 255, false))
 	}
 	return
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *CreateTopicContext) OK(r interface{}) error {
+func (ctx *PostTopicContext) OK(r interface{}) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
 	}
@@ -95,7 +104,7 @@ func (ctx *CreateTopicContext) OK(r interface{}) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateTopicContext) BadRequest(r string) error {
+func (ctx *PostTopicContext) BadRequest(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -103,7 +112,7 @@ func (ctx *CreateTopicContext) BadRequest(r string) error {
 }
 
 // Unauthorized sends a HTTP response with status code 401.
-func (ctx *CreateTopicContext) Unauthorized(r string) error {
+func (ctx *PostTopicContext) Unauthorized(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -111,7 +120,7 @@ func (ctx *CreateTopicContext) Unauthorized(r string) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *CreateTopicContext) NotFound(r string) error {
+func (ctx *PostTopicContext) NotFound(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -119,72 +128,7 @@ func (ctx *CreateTopicContext) NotFound(r string) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateTopicContext) InternalServerError(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
-}
-
-// DeleteTopicContext provides the topic delete action context.
-type DeleteTopicContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	TopicID string
-}
-
-// NewDeleteTopicContext parses the incoming request URL and body, performs validations and creates the
-// context used by the topic controller delete action.
-func NewDeleteTopicContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteTopicContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := DeleteTopicContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramTopicID := req.Params["topicID"]
-	if len(paramTopicID) > 0 {
-		rawTopicID := paramTopicID[0]
-		rctx.TopicID = rawTopicID
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *DeleteTopicContext) OK(r interface{}) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *DeleteTopicContext) BadRequest(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *DeleteTopicContext) Unauthorized(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 401, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *DeleteTopicContext) NotFound(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *DeleteTopicContext) InternalServerError(r string) error {
+func (ctx *PostTopicContext) InternalServerError(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -278,16 +222,16 @@ func NewVoteTopicContext(ctx context.Context, r *http.Request, service *goa.Serv
 
 // voteTopicPayload is the topic vote action payload.
 type voteTopicPayload struct {
-	// user id
-	UserID *string `form:"userID,omitempty" json:"userID,omitempty" xml:"userID,omitempty"`
+	// username
+	UserName *string `form:"userName,omitempty" json:"userName,omitempty" xml:"userName,omitempty"`
 	// upvote/downvote topic
 	Vote *string `form:"vote,omitempty" json:"vote,omitempty" xml:"vote,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *voteTopicPayload) Validate() (err error) {
-	if payload.UserID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userID"))
+	if payload.UserName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userName"))
 	}
 	if payload.Vote == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "vote"))
@@ -303,8 +247,8 @@ func (payload *voteTopicPayload) Validate() (err error) {
 // Publicize creates VoteTopicPayload from voteTopicPayload
 func (payload *voteTopicPayload) Publicize() *VoteTopicPayload {
 	var pub VoteTopicPayload
-	if payload.UserID != nil {
-		pub.UserID = *payload.UserID
+	if payload.UserName != nil {
+		pub.UserName = *payload.UserName
 	}
 	if payload.Vote != nil {
 		pub.Vote = *payload.Vote
@@ -314,16 +258,16 @@ func (payload *voteTopicPayload) Publicize() *VoteTopicPayload {
 
 // VoteTopicPayload is the topic vote action payload.
 type VoteTopicPayload struct {
-	// user id
-	UserID string `form:"userID" json:"userID" xml:"userID"`
+	// username
+	UserName string `form:"userName" json:"userName" xml:"userName"`
 	// upvote/downvote topic
 	Vote string `form:"vote" json:"vote" xml:"vote"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *VoteTopicPayload) Validate() (err error) {
-	if payload.UserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userID"))
+	if payload.UserName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "userName"))
 	}
 	if payload.Vote == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "vote"))
@@ -374,133 +318,31 @@ func (ctx *VoteTopicContext) InternalServerError(r string) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// CreateUserContext provides the user create action context.
-type CreateUserContext struct {
+// LoginUserContext provides the user login action context.
+type LoginUserContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Payload *CreateUserPayload
-}
-
-// NewCreateUserContext parses the incoming request URL and body, performs validations and creates the
-// context used by the user controller create action.
-func NewCreateUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUserContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := CreateUserContext{Context: ctx, ResponseData: resp, RequestData: req}
-	return &rctx, err
-}
-
-// createUserPayload is the user create action payload.
-type createUserPayload struct {
-	// country of the user
-	Country *string `form:"country,omitempty" json:"country,omitempty" xml:"country,omitempty"`
-	// name of the user
-	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *createUserPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
-	}
-	if payload.Country == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "country"))
-	}
-	return
-}
-
-// Publicize creates CreateUserPayload from createUserPayload
-func (payload *createUserPayload) Publicize() *CreateUserPayload {
-	var pub CreateUserPayload
-	if payload.Country != nil {
-		pub.Country = *payload.Country
-	}
-	if payload.Name != nil {
-		pub.Name = *payload.Name
-	}
-	return &pub
-}
-
-// CreateUserPayload is the user create action payload.
-type CreateUserPayload struct {
-	// country of the user
-	Country string `form:"country" json:"country" xml:"country"`
-	// name of the user
-	Name string `form:"name" json:"name" xml:"name"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *CreateUserPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
-	}
-	if payload.Country == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "country"))
-	}
-	return
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *CreateUserContext) OK(r interface{}) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateUserContext) BadRequest(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *CreateUserContext) Unauthorized(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 401, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *CreateUserContext) NotFound(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateUserContext) InternalServerError(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
-}
-
-// GetUserContext provides the user get action context.
-type GetUserContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
+	Password string
 	UserName string
 }
 
-// NewGetUserContext parses the incoming request URL and body, performs validations and creates the
-// context used by the user controller get action.
-func NewGetUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*GetUserContext, error) {
+// NewLoginUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller login action.
+func NewLoginUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*LoginUserContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := GetUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := LoginUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPassword := req.Params["password"]
+	if len(paramPassword) == 0 {
+		err = goa.MergeErrors(err, goa.MissingParamError("password"))
+	} else {
+		rawPassword := paramPassword[0]
+		rctx.Password = rawPassword
+	}
 	paramUserName := req.Params["userName"]
 	if len(paramUserName) > 0 {
 		rawUserName := paramUserName[0]
@@ -510,7 +352,7 @@ func NewGetUserContext(ctx context.Context, r *http.Request, service *goa.Servic
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *GetUserContext) OK(r interface{}) error {
+func (ctx *LoginUserContext) OK(r interface{}) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
 	}
@@ -518,7 +360,7 @@ func (ctx *GetUserContext) OK(r interface{}) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *GetUserContext) BadRequest(r string) error {
+func (ctx *LoginUserContext) BadRequest(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -526,7 +368,7 @@ func (ctx *GetUserContext) BadRequest(r string) error {
 }
 
 // Unauthorized sends a HTTP response with status code 401.
-func (ctx *GetUserContext) Unauthorized(r string) error {
+func (ctx *LoginUserContext) Unauthorized(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -534,7 +376,7 @@ func (ctx *GetUserContext) Unauthorized(r string) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *GetUserContext) NotFound(r string) error {
+func (ctx *LoginUserContext) NotFound(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -542,7 +384,130 @@ func (ctx *GetUserContext) NotFound(r string) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *GetUserContext) InternalServerError(r string) error {
+func (ctx *LoginUserContext) InternalServerError(r string) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// RegisterUserContext provides the user register action context.
+type RegisterUserContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *RegisterUserPayload
+}
+
+// NewRegisterUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller register action.
+func NewRegisterUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*RegisterUserContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := RegisterUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// registerUserPayload is the user register action payload.
+type registerUserPayload struct {
+	// country of the user
+	Country *string `form:"country,omitempty" json:"country,omitempty" xml:"country,omitempty"`
+	// username
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// password of the user
+	Password *string `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *registerUserPayload) Validate() (err error) {
+	if payload.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	}
+	if payload.Password == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "password"))
+	}
+	if payload.Country == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "country"))
+	}
+	return
+}
+
+// Publicize creates RegisterUserPayload from registerUserPayload
+func (payload *registerUserPayload) Publicize() *RegisterUserPayload {
+	var pub RegisterUserPayload
+	if payload.Country != nil {
+		pub.Country = *payload.Country
+	}
+	if payload.Name != nil {
+		pub.Name = *payload.Name
+	}
+	if payload.Password != nil {
+		pub.Password = *payload.Password
+	}
+	return &pub
+}
+
+// RegisterUserPayload is the user register action payload.
+type RegisterUserPayload struct {
+	// country of the user
+	Country string `form:"country" json:"country" xml:"country"`
+	// username
+	Name string `form:"name" json:"name" xml:"name"`
+	// password of the user
+	Password string `form:"password" json:"password" xml:"password"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *RegisterUserPayload) Validate() (err error) {
+	if payload.Name == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	}
+	if payload.Password == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "password"))
+	}
+	if payload.Country == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "country"))
+	}
+	return
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *RegisterUserContext) OK(r interface{}) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *RegisterUserContext) BadRequest(r string) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *RegisterUserContext) Unauthorized(r string) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 401, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *RegisterUserContext) NotFound(r string) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *RegisterUserContext) InternalServerError(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}
@@ -554,7 +519,7 @@ type RemoveUserContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	UserID string
+	UserName string
 }
 
 // NewRemoveUserContext parses the incoming request URL and body, performs validations and creates the
@@ -566,10 +531,10 @@ func NewRemoveUserContext(ctx context.Context, r *http.Request, service *goa.Ser
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := RemoveUserContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["userID"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		rctx.UserID = rawUserID
+	paramUserName := req.Params["userName"]
+	if len(paramUserName) > 0 {
+		rawUserName := paramUserName[0]
+		rctx.UserName = rawUserName
 	}
 	return &rctx, err
 }
@@ -608,65 +573,6 @@ func (ctx *RemoveUserContext) NotFound(r string) error {
 
 // InternalServerError sends a HTTP response with status code 500.
 func (ctx *RemoveUserContext) InternalServerError(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
-}
-
-// ShowUserContext provides the user show action context.
-type ShowUserContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-}
-
-// NewShowUserContext parses the incoming request URL and body, performs validations and creates the
-// context used by the user controller show action.
-func NewShowUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowUserContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ShowUserContext{Context: ctx, ResponseData: resp, RequestData: req}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowUserContext) OK(r interface{}) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowUserContext) BadRequest(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *ShowUserContext) Unauthorized(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 401, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowUserContext) NotFound(r string) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowUserContext) InternalServerError(r string) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "")
 	}

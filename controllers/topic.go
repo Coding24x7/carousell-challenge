@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/Coding24x7/carousell-challenge/app"
+	"github.com/Coding24x7/carousell-challenge/lib"
 	"github.com/goadesign/goa"
 )
 
@@ -15,42 +18,38 @@ func NewTopicController(service *goa.Service) *TopicController {
 	return &TopicController{Controller: service.NewController("TopicController")}
 }
 
-// Create runs the create action.
-func (c *TopicController) Create(ctx *app.CreateTopicContext) error {
-	// TopicController_Create: start_implement
+// Post runs the post action.
+func (c *TopicController) Post(ctx *app.PostTopicContext) error {
+	t, err := lib.PostTopic(ctx.Payload.UserName, ctx.Payload.Content)
 
-	// Put your logic here
-
-	return nil
-	// TopicController_Create: end_implement
-}
-
-// Delete runs the delete action.
-func (c *TopicController) Delete(ctx *app.DeleteTopicContext) error {
-	// TopicController_Delete: start_implement
-
-	// Put your logic here
-
-	return nil
-	// TopicController_Delete: end_implement
+	if err != nil {
+		return processErr(ctx, err)
+	}
+	return ctx.OK(t)
 }
 
 // Show runs the show action.
 func (c *TopicController) Show(ctx *app.ShowTopicContext) error {
-	// TopicController_Show: start_implement
-
-	// Put your logic here
-
-	return nil
-	// TopicController_Show: end_implement
+	topics := lib.ShowTopics()
+	return ctx.OK(topics)
 }
 
 // Vote runs the vote action.
 func (c *TopicController) Vote(ctx *app.VoteTopicContext) error {
-	// TopicController_Vote: start_implement
+	if ctx.Payload.Vote == "up" {
+		err := lib.UpvoteTopic(ctx.TopicID, ctx.Payload.UserName)
+		if err != nil {
+			return processErr(ctx, err)
+		}
+		return ctx.OK(nil)
 
-	// Put your logic here
+	} else if ctx.Payload.Vote == "down" {
+		err := lib.DownvoteTopic(ctx.TopicID, ctx.Payload.UserName)
+		if err != nil {
+			return processErr(ctx, err)
+		}
+		return ctx.OK(nil)
 
-	return nil
-	// TopicController_Vote: end_implement
+	}
+	return ctx.BadRequest(fmt.Sprintf("wrong parameter vote %s", ctx.Payload.Vote))
 }

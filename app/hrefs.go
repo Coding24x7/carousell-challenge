@@ -14,8 +14,3 @@ package app
 func TopicHref() string {
 	return "/api/v1/topics"
 }
-
-// UserHref returns the resource href.
-func UserHref() string {
-	return "/api/v1/users"
-}

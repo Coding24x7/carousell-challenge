@@ -10,7 +10,7 @@ var _ = Resource("topic", func() {
 
 	Action("show", func() {
 		Routing(GET(""))
-		Description("Get top topics")
+		Description("Show top topics")
 
 		Response(OK, Any)
 		Response(NotFound, String)
@@ -19,14 +19,16 @@ var _ = Resource("topic", func() {
 		Response(InternalServerError, String)
 	})
 
-	Action("create", func() {
+	Action("post", func() {
 		Routing(POST(""))
-		Description("Create new topic")
+		Description("Post new topic")
 
 		Payload(func() {
-			Attribute("content", String, "Content of the topic")
-			Attribute("userID", String, "Creator of this topic")
-			Required("content", "userID")
+			Attribute("content", String, "Content of the topic", func() {
+				MaxLength(255)
+			})
+			Attribute("userName", String, "Author of this topic")
+			Required("content", "userName")
 
 		})
 
@@ -42,24 +44,13 @@ var _ = Resource("topic", func() {
 		Routing(PATCH("/:topicID"))
 
 		Payload(func() {
-			Attribute("userID", String, "user id")
+			Attribute("userName", String, "username")
 			Attribute("vote", String, "upvote/downvote topic", func() {
-				Enum("up", "down") // And validation rules
+				Enum("up", "down")
 			})
 
-			Required("userID", "vote")
+			Required("userName", "vote")
 		})
-
-		Response(OK, Any)
-		Response(NotFound, String)
-		Response(BadRequest, String)
-		Response(Unauthorized, String)
-		Response(InternalServerError, String)
-	})
-
-	Action("delete", func() {
-		Description("remove the topic")
-		Routing(DELETE("/:topicID"))
 
 		Response(OK, Any)
 		Response(NotFound, String)

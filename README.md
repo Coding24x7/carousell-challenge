@@ -20,6 +20,7 @@ $ dep ensure -v
 
 ```bash
 go get github.com/goadesign/goa
+./goagen.sh
 ```
 
 ## Step to run
@@ -27,3 +28,7 @@ go get github.com/goadesign/goa
 ```
 ./run.sh
 ```
+
+The API documentation is available at `localhost:8080/swagger`.
+
+Swagger documentation provides facilities to call the REST API as well, so it can be used for testing.

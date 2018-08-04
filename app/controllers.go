@@ -120,8 +120,7 @@ func handleSwaggerOrigin(h goa.Handler) goa.Handler {
 // TopicController is the controller interface for the Topic actions.
 type TopicController interface {
 	goa.Muxer
-	Create(*CreateTopicContext) error
-	Delete(*DeleteTopicContext) error
+	Post(*PostTopicContext) error
 	Show(*ShowTopicContext) error
 	Vote(*VoteTopicContext) error
 }
@@ -139,37 +138,21 @@ func MountTopicController(service *goa.Service, ctrl TopicController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewCreateTopicContext(ctx, req, service)
+		rctx, err := NewPostTopicContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
 		// Build the payload
 		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*CreateTopicPayload)
+			rctx.Payload = rawPayload.(*PostTopicPayload)
 		} else {
 			return goa.MissingPayloadError()
 		}
-		return ctrl.Create(rctx)
+		return ctrl.Post(rctx)
 	}
 	h = handleTopicOrigin(h)
-	service.Mux.Handle("POST", "/api/v1/topics", ctrl.MuxHandler("create", h, unmarshalCreateTopicPayload))
-	service.LogInfo("mount", "ctrl", "Topic", "action", "Create", "route", "POST /api/v1/topics")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewDeleteTopicContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Delete(rctx)
-	}
-	h = handleTopicOrigin(h)
-	service.Mux.Handle("DELETE", "/api/v1/topics/:topicID", ctrl.MuxHandler("delete", h, nil))
-	service.LogInfo("mount", "ctrl", "Topic", "action", "Delete", "route", "DELETE /api/v1/topics/:topicID")
+	service.Mux.Handle("POST", "/api/v1/topics", ctrl.MuxHandler("post", h, unmarshalPostTopicPayload))
+	service.LogInfo("mount", "ctrl", "Topic", "action", "Post", "route", "POST /api/v1/topics")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -237,9 +220,9 @@ func handleTopicOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
-// unmarshalCreateTopicPayload unmarshals the request body into the context request data Payload field.
-func unmarshalCreateTopicPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &createTopicPayload{}
+// unmarshalPostTopicPayload unmarshals the request body into the context request data Payload field.
+func unmarshalPostTopicPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &postTopicPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}
@@ -270,19 +253,17 @@ func unmarshalVoteTopicPayload(ctx context.Context, service *goa.Service, req *h
 // UserController is the controller interface for the User actions.
 type UserController interface {
 	goa.Muxer
-	Create(*CreateUserContext) error
-	Get(*GetUserContext) error
+	Login(*LoginUserContext) error
+	Register(*RegisterUserContext) error
 	Remove(*RemoveUserContext) error
-	Show(*ShowUserContext) error
 }
 
 // MountUserController "mounts" a User resource controller on the given service.
 func MountUserController(service *goa.Service, ctrl UserController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/api/v1/users", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/api/v1/users/:userName", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/api/v1/users/:userID", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/api/v1/users", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -290,37 +271,37 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewCreateUserContext(ctx, req, service)
+		rctx, err := NewLoginUserContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Login(rctx)
+	}
+	h = handleUserOrigin(h)
+	service.Mux.Handle("GET", "/api/v1/users/:userName", ctrl.MuxHandler("login", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Login", "route", "GET /api/v1/users/:userName")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewRegisterUserContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
 		// Build the payload
 		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*CreateUserPayload)
+			rctx.Payload = rawPayload.(*RegisterUserPayload)
 		} else {
 			return goa.MissingPayloadError()
 		}
-		return ctrl.Create(rctx)
+		return ctrl.Register(rctx)
 	}
 	h = handleUserOrigin(h)
-	service.Mux.Handle("POST", "/api/v1/users", ctrl.MuxHandler("create", h, unmarshalCreateUserPayload))
-	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /api/v1/users")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewGetUserContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Get(rctx)
-	}
-	h = handleUserOrigin(h)
-	service.Mux.Handle("GET", "/api/v1/users/:userName", ctrl.MuxHandler("get", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Get", "route", "GET /api/v1/users/:userName")
+	service.Mux.Handle("POST", "/api/v1/users", ctrl.MuxHandler("register", h, unmarshalRegisterUserPayload))
+	service.LogInfo("mount", "ctrl", "User", "action", "Register", "route", "POST /api/v1/users")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -335,24 +316,8 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		return ctrl.Remove(rctx)
 	}
 	h = handleUserOrigin(h)
-	service.Mux.Handle("DELETE", "/api/v1/users/:userID", ctrl.MuxHandler("remove", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Remove", "route", "DELETE /api/v1/users/:userID")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewShowUserContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Show(rctx)
-	}
-	h = handleUserOrigin(h)
-	service.Mux.Handle("GET", "/api/v1/users", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Show", "route", "GET /api/v1/users")
+	service.Mux.Handle("DELETE", "/api/v1/users/:userName", ctrl.MuxHandler("remove", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Remove", "route", "DELETE /api/v1/users/:userName")
 }
 
 // handleUserOrigin applies the CORS response headers corresponding to the origin.
@@ -382,9 +347,9 @@ func handleUserOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
-// unmarshalCreateUserPayload unmarshals the request body into the context request data Payload field.
-func unmarshalCreateUserPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &createUserPayload{}
+// unmarshalRegisterUserPayload unmarshals the request body into the context request data Payload field.
+func unmarshalRegisterUserPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &registerUserPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}

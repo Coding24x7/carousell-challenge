@@ -24,11 +24,11 @@ import (
 	"net/url"
 )
 
-// CreateTopicBadRequest runs the method Create of the given controller with the given parameters and payload.
+// PostTopicBadRequest runs the method Post of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateTopicBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.CreateTopicPayload) http.ResponseWriter {
+func PostTopicBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.PostTopicPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -70,7 +70,7 @@ func CreateTopicBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	createCtx, __err := app.NewCreateTopicContext(goaCtx, req, service)
+	postCtx, __err := app.NewPostTopicContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -79,10 +79,10 @@ func CreateTopicBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil
 	}
-	createCtx.Payload = payload
+	postCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Create(createCtx)
+	__err = ctrl.Post(postCtx)
 
 	// Validate response
 	if __err != nil {
@@ -96,11 +96,11 @@ func CreateTopicBadRequest(t goatest.TInterface, ctx context.Context, service *g
 	return rw
 }
 
-// CreateTopicInternalServerError runs the method Create of the given controller with the given parameters and payload.
+// PostTopicInternalServerError runs the method Post of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateTopicInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.CreateTopicPayload) http.ResponseWriter {
+func PostTopicInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.PostTopicPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -142,7 +142,7 @@ func CreateTopicInternalServerError(t goatest.TInterface, ctx context.Context, s
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	createCtx, __err := app.NewCreateTopicContext(goaCtx, req, service)
+	postCtx, __err := app.NewPostTopicContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -151,10 +151,10 @@ func CreateTopicInternalServerError(t goatest.TInterface, ctx context.Context, s
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil
 	}
-	createCtx.Payload = payload
+	postCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Create(createCtx)
+	__err = ctrl.Post(postCtx)
 
 	// Validate response
 	if __err != nil {
@@ -168,11 +168,11 @@ func CreateTopicInternalServerError(t goatest.TInterface, ctx context.Context, s
 	return rw
 }
 
-// CreateTopicNotFound runs the method Create of the given controller with the given parameters and payload.
+// PostTopicNotFound runs the method Post of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateTopicNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.CreateTopicPayload) http.ResponseWriter {
+func PostTopicNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.PostTopicPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -214,7 +214,7 @@ func CreateTopicNotFound(t goatest.TInterface, ctx context.Context, service *goa
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	createCtx, __err := app.NewCreateTopicContext(goaCtx, req, service)
+	postCtx, __err := app.NewPostTopicContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -223,10 +223,10 @@ func CreateTopicNotFound(t goatest.TInterface, ctx context.Context, service *goa
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil
 	}
-	createCtx.Payload = payload
+	postCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Create(createCtx)
+	__err = ctrl.Post(postCtx)
 
 	// Validate response
 	if __err != nil {
@@ -240,11 +240,11 @@ func CreateTopicNotFound(t goatest.TInterface, ctx context.Context, service *goa
 	return rw
 }
 
-// CreateTopicOK runs the method Create of the given controller with the given parameters and payload.
+// PostTopicOK runs the method Post of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateTopicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.CreateTopicPayload) http.ResponseWriter {
+func PostTopicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.PostTopicPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -286,7 +286,7 @@ func CreateTopicOK(t goatest.TInterface, ctx context.Context, service *goa.Servi
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	createCtx, __err := app.NewCreateTopicContext(goaCtx, req, service)
+	postCtx, __err := app.NewPostTopicContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -295,10 +295,10 @@ func CreateTopicOK(t goatest.TInterface, ctx context.Context, service *goa.Servi
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil
 	}
-	createCtx.Payload = payload
+	postCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Create(createCtx)
+	__err = ctrl.Post(postCtx)
 
 	// Validate response
 	if __err != nil {
@@ -312,11 +312,11 @@ func CreateTopicOK(t goatest.TInterface, ctx context.Context, service *goa.Servi
 	return rw
 }
 
-// CreateTopicUnauthorized runs the method Create of the given controller with the given parameters and payload.
+// PostTopicUnauthorized runs the method Post of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateTopicUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.CreateTopicPayload) http.ResponseWriter {
+func PostTopicUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, payload *app.PostTopicPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -358,7 +358,7 @@ func CreateTopicUnauthorized(t goatest.TInterface, ctx context.Context, service 
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	createCtx, __err := app.NewCreateTopicContext(goaCtx, req, service)
+	postCtx, __err := app.NewPostTopicContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -367,319 +367,14 @@ func CreateTopicUnauthorized(t goatest.TInterface, ctx context.Context, service 
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil
 	}
-	createCtx.Payload = payload
+	postCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Create(createCtx)
+	__err = ctrl.Post(postCtx)
 
 	// Validate response
 	if __err != nil {
 		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
-	}
-	if rw.Code != 401 {
-		t.Errorf("invalid response status code: got %+v, expected 401", rw.Code)
-	}
-
-	// Return results
-	return rw
-}
-
-// DeleteTopicBadRequest runs the method Delete of the given controller with the given parameters.
-// It returns the response writer so it's possible to inspect the response headers.
-// If ctx is nil then context.Background() is used.
-// If service is nil then a default service is created.
-func DeleteTopicBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, topicID string) http.ResponseWriter {
-	// Setup service
-	var (
-		logBuf bytes.Buffer
-
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
-	)
-	if service == nil {
-		service = goatest.Service(&logBuf, respSetter)
-	} else {
-		logger := log.New(&logBuf, "", log.Ltime)
-		service.WithLogger(goa.NewLogger(logger))
-		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
-		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
-		service.Encoder.Register(newEncoder, "*/*")
-	}
-
-	// Setup request context
-	rw := httptest.NewRecorder()
-	u := &url.URL{
-		Path: fmt.Sprintf("/api/v1/topics/%v", topicID),
-	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
-	if err != nil {
-		panic("invalid test " + err.Error()) // bug
-	}
-	prms := url.Values{}
-	prms["topicID"] = []string{fmt.Sprintf("%v", topicID)}
-	if ctx == nil {
-		ctx = context.Background()
-	}
-	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	deleteCtx, _err := app.NewDeleteTopicContext(goaCtx, req, service)
-	if _err != nil {
-		e, ok := _err.(goa.ServiceError)
-		if !ok {
-			panic("invalid test data " + _err.Error()) // bug
-		}
-		t.Errorf("unexpected parameter validation error: %+v", e)
-		return nil
-	}
-
-	// Perform action
-	_err = ctrl.Delete(deleteCtx)
-
-	// Validate response
-	if _err != nil {
-		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
-	}
-	if rw.Code != 400 {
-		t.Errorf("invalid response status code: got %+v, expected 400", rw.Code)
-	}
-
-	// Return results
-	return rw
-}
-
-// DeleteTopicInternalServerError runs the method Delete of the given controller with the given parameters.
-// It returns the response writer so it's possible to inspect the response headers.
-// If ctx is nil then context.Background() is used.
-// If service is nil then a default service is created.
-func DeleteTopicInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, topicID string) http.ResponseWriter {
-	// Setup service
-	var (
-		logBuf bytes.Buffer
-
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
-	)
-	if service == nil {
-		service = goatest.Service(&logBuf, respSetter)
-	} else {
-		logger := log.New(&logBuf, "", log.Ltime)
-		service.WithLogger(goa.NewLogger(logger))
-		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
-		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
-		service.Encoder.Register(newEncoder, "*/*")
-	}
-
-	// Setup request context
-	rw := httptest.NewRecorder()
-	u := &url.URL{
-		Path: fmt.Sprintf("/api/v1/topics/%v", topicID),
-	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
-	if err != nil {
-		panic("invalid test " + err.Error()) // bug
-	}
-	prms := url.Values{}
-	prms["topicID"] = []string{fmt.Sprintf("%v", topicID)}
-	if ctx == nil {
-		ctx = context.Background()
-	}
-	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	deleteCtx, _err := app.NewDeleteTopicContext(goaCtx, req, service)
-	if _err != nil {
-		e, ok := _err.(goa.ServiceError)
-		if !ok {
-			panic("invalid test data " + _err.Error()) // bug
-		}
-		t.Errorf("unexpected parameter validation error: %+v", e)
-		return nil
-	}
-
-	// Perform action
-	_err = ctrl.Delete(deleteCtx)
-
-	// Validate response
-	if _err != nil {
-		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
-	}
-	if rw.Code != 500 {
-		t.Errorf("invalid response status code: got %+v, expected 500", rw.Code)
-	}
-
-	// Return results
-	return rw
-}
-
-// DeleteTopicNotFound runs the method Delete of the given controller with the given parameters.
-// It returns the response writer so it's possible to inspect the response headers.
-// If ctx is nil then context.Background() is used.
-// If service is nil then a default service is created.
-func DeleteTopicNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, topicID string) http.ResponseWriter {
-	// Setup service
-	var (
-		logBuf bytes.Buffer
-
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
-	)
-	if service == nil {
-		service = goatest.Service(&logBuf, respSetter)
-	} else {
-		logger := log.New(&logBuf, "", log.Ltime)
-		service.WithLogger(goa.NewLogger(logger))
-		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
-		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
-		service.Encoder.Register(newEncoder, "*/*")
-	}
-
-	// Setup request context
-	rw := httptest.NewRecorder()
-	u := &url.URL{
-		Path: fmt.Sprintf("/api/v1/topics/%v", topicID),
-	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
-	if err != nil {
-		panic("invalid test " + err.Error()) // bug
-	}
-	prms := url.Values{}
-	prms["topicID"] = []string{fmt.Sprintf("%v", topicID)}
-	if ctx == nil {
-		ctx = context.Background()
-	}
-	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	deleteCtx, _err := app.NewDeleteTopicContext(goaCtx, req, service)
-	if _err != nil {
-		e, ok := _err.(goa.ServiceError)
-		if !ok {
-			panic("invalid test data " + _err.Error()) // bug
-		}
-		t.Errorf("unexpected parameter validation error: %+v", e)
-		return nil
-	}
-
-	// Perform action
-	_err = ctrl.Delete(deleteCtx)
-
-	// Validate response
-	if _err != nil {
-		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
-	}
-	if rw.Code != 404 {
-		t.Errorf("invalid response status code: got %+v, expected 404", rw.Code)
-	}
-
-	// Return results
-	return rw
-}
-
-// DeleteTopicOK runs the method Delete of the given controller with the given parameters.
-// It returns the response writer so it's possible to inspect the response headers.
-// If ctx is nil then context.Background() is used.
-// If service is nil then a default service is created.
-func DeleteTopicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, topicID string) http.ResponseWriter {
-	// Setup service
-	var (
-		logBuf bytes.Buffer
-
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
-	)
-	if service == nil {
-		service = goatest.Service(&logBuf, respSetter)
-	} else {
-		logger := log.New(&logBuf, "", log.Ltime)
-		service.WithLogger(goa.NewLogger(logger))
-		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
-		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
-		service.Encoder.Register(newEncoder, "*/*")
-	}
-
-	// Setup request context
-	rw := httptest.NewRecorder()
-	u := &url.URL{
-		Path: fmt.Sprintf("/api/v1/topics/%v", topicID),
-	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
-	if err != nil {
-		panic("invalid test " + err.Error()) // bug
-	}
-	prms := url.Values{}
-	prms["topicID"] = []string{fmt.Sprintf("%v", topicID)}
-	if ctx == nil {
-		ctx = context.Background()
-	}
-	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	deleteCtx, _err := app.NewDeleteTopicContext(goaCtx, req, service)
-	if _err != nil {
-		e, ok := _err.(goa.ServiceError)
-		if !ok {
-			panic("invalid test data " + _err.Error()) // bug
-		}
-		t.Errorf("unexpected parameter validation error: %+v", e)
-		return nil
-	}
-
-	// Perform action
-	_err = ctrl.Delete(deleteCtx)
-
-	// Validate response
-	if _err != nil {
-		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
-	}
-	if rw.Code != 200 {
-		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
-	}
-
-	// Return results
-	return rw
-}
-
-// DeleteTopicUnauthorized runs the method Delete of the given controller with the given parameters.
-// It returns the response writer so it's possible to inspect the response headers.
-// If ctx is nil then context.Background() is used.
-// If service is nil then a default service is created.
-func DeleteTopicUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.TopicController, topicID string) http.ResponseWriter {
-	// Setup service
-	var (
-		logBuf bytes.Buffer
-
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
-	)
-	if service == nil {
-		service = goatest.Service(&logBuf, respSetter)
-	} else {
-		logger := log.New(&logBuf, "", log.Ltime)
-		service.WithLogger(goa.NewLogger(logger))
-		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
-		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
-		service.Encoder.Register(newEncoder, "*/*")
-	}
-
-	// Setup request context
-	rw := httptest.NewRecorder()
-	u := &url.URL{
-		Path: fmt.Sprintf("/api/v1/topics/%v", topicID),
-	}
-	req, err := http.NewRequest("DELETE", u.String(), nil)
-	if err != nil {
-		panic("invalid test " + err.Error()) // bug
-	}
-	prms := url.Values{}
-	prms["topicID"] = []string{fmt.Sprintf("%v", topicID)}
-	if ctx == nil {
-		ctx = context.Background()
-	}
-	goaCtx := goa.NewContext(goa.WithAction(ctx, "TopicTest"), rw, req, prms)
-	deleteCtx, _err := app.NewDeleteTopicContext(goaCtx, req, service)
-	if _err != nil {
-		e, ok := _err.(goa.ServiceError)
-		if !ok {
-			panic("invalid test data " + _err.Error()) // bug
-		}
-		t.Errorf("unexpected parameter validation error: %+v", e)
-		return nil
-	}
-
-	// Perform action
-	_err = ctrl.Delete(deleteCtx)
-
-	// Validate response
-	if _err != nil {
-		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
 	}
 	if rw.Code != 401 {
 		t.Errorf("invalid response status code: got %+v, expected 401", rw.Code)
