@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/Coding24x7/carousell-challenge",
+	"ImportPath": "github.com/Coding24x7/twitter-clone",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v80",
 	"Deps": [

@@ -3,11 +3,11 @@
 set -x
 set -e
 
-path=${GOPATH}/src/github.com/Coding24x7/carousell-challenge
+path=${GOPATH}/src/github.com/Coding24x7/twitter-clone
 
 
 cd ${path}
 
-go build -o carousell-challenge
+go build -o twitter-clone
 
-./carousell-challenge
+./twitter-clone

@@ -3,16 +3,16 @@ consumes:
 definitions:
   PostTopicPayload:
     example:
-      author: Non non tempora id consequatur dolor.
-      content: oyp9dknlxr
+      author: Natus eius enim nihil sequi molestias perspiciatis.
+      content: rmjltfntf4
     properties:
       author:
         description: Author of this topic
-        example: Non non tempora id consequatur dolor.
+        example: Natus eius enim nihil sequi molestias perspiciatis.
         type: string
       content:
         description: Content of the topic
-        example: oyp9dknlxr
+        example: rmjltfntf4
         maxLength: 255
         type: string
     required:
@@ -22,21 +22,21 @@ definitions:
     type: object
   RegisterUserPayload:
     example:
-      country: Qui et quia recusandae voluptatem blanditiis.
-      name: Ipsum voluptatem aut tenetur veniam accusamus.
-      password: Placeat quasi aspernatur est omnis perspiciatis illo.
+      country: Officiis dolores nemo nobis qui.
+      name: Dolor distinctio aut soluta omnis.
+      password: Dicta reiciendis modi vel dicta ut.
     properties:
       country:
         description: country of the user
-        example: Qui et quia recusandae voluptatem blanditiis.
+        example: Officiis dolores nemo nobis qui.
         type: string
       name:
         description: username
-        example: Ipsum voluptatem aut tenetur veniam accusamus.
+        example: Dolor distinctio aut soluta omnis.
         type: string
       password:
         description: password of the user
-        example: Placeat quasi aspernatur est omnis perspiciatis illo.
+        example: Dicta reiciendis modi vel dicta ut.
         type: string
     required:
     - name
@@ -46,19 +46,19 @@ definitions:
     type: object
   VoteTopicPayload:
     example:
-      userName: Qui iste et.
-      vote: down
+      userName: Soluta et in sit sunt est sed.
+      vote: up
     properties:
       userName:
         description: username
-        example: Qui iste et.
+        example: Soluta et in sit sunt est sed.
         type: string
       vote:
         description: upvote/downvote topic
         enum:
         - up
         - down
-        example: down
+        example: up
         type: string
     required:
     - userName
@@ -103,8 +103,8 @@ definitions:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
 info:
-  description: Carousell Challenge.
-  title: Carousell Challenge
+  description: Twitter Clone.
+  title: Twitter Clone
   version: "0.1"
 paths:
   /{filepath}:

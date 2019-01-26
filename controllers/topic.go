@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 
-	"github.com/Coding24x7/carousell-challenge/app"
-	"github.com/Coding24x7/carousell-challenge/lib"
+	"github.com/Coding24x7/twitter-clone/app"
+	"github.com/Coding24x7/twitter-clone/lib"
 	"github.com/goadesign/goa"
 )
 

@@ -9,7 +9,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/Coding24x7/carousell-challenge/controllers"
+	"github.com/Coding24x7/twitter-clone/controllers"
 )
 
 func main() {

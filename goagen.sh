@@ -3,7 +3,7 @@
 set +x
 set +e
 
-gitpath=github.com/Coding24x7/carousell-challenge
+gitpath=github.com/Coding24x7/twitter-clone
 dirpath=${GOPATH}/src/${gitpath}
 
 # work from webapp

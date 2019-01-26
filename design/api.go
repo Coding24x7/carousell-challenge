@@ -4,9 +4,9 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = API("carousell-challenge", func() { // API defines the microservice endpoint and
-	Title("Carousell Challenge")
-	Description("Carousell Challenge.") // and exactly one API definition appearing in
+var _ = API("twitter-clone", func() { // API defines the microservice endpoint and
+	Title("Twitter Clone")
+	Description("Twitter Clone.") // and exactly one API definition appearing in
 	Scheme("http", "https")             // the design.
 	Version("0.1")
 	BasePath("api/v1")           // Base path to all API endpoints

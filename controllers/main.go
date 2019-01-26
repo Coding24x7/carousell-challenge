@@ -1,4 +1,4 @@
-//go:generate goagen bootstrap -d github.com/Coding24x7/carousell-challenge/webapp/design
+//go:generate goagen bootstrap -d github.com/Coding24x7/twitter-clone/webapp/design
 
 package controllers
 
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Coding24x7/carousell-challenge/app"
+	"github.com/Coding24x7/twitter-clone/app"
 	"github.com/goadesign/goa"
 	goalogrus "github.com/goadesign/goa/logging/logrus"
 	"github.com/goadesign/goa/middleware"
@@ -17,7 +17,7 @@ import (
 // GoaServer starts server
 func GoaServer(logger *log.Logger, address string) {
 	// Create service
-	service := goa.New("carousell-challenge")
+	service := goa.New("twitter-clone")
 	logAdapter := goalogrus.New(logger)
 	// set up service to use logger
 	service.WithLogger(logAdapter)
