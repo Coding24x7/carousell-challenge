@@ -1,4 +1,4 @@
-# carousell-challenge
+# Twitter-Clone
 
 ## Prerequisite
 
